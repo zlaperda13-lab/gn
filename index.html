@@ -85,44 +85,109 @@ html, body {
 
 #scream.on {
     display: flex;
-    animation: screenShake 0.04s infinite;
+    animation: screenShake 0.035s infinite;
 }
 
 @keyframes screenShake {
-    0%   { transform: translate(0, 0); }
-    20%  { transform: translate(-15px, 10px); }
-    40%  { transform: translate(15px, -10px); }
-    60%  { transform: translate(-10px, -15px); }
-    80%  { transform: translate(10px, 15px); }
-    100% { transform: translate(0, 0); }
+    0%   { transform: translate(0, 0) rotate(0deg); }
+    15%  { transform: translate(-18px, 12px) rotate(-0.6deg); }
+    30%  { transform: translate(20px, -14px) rotate(0.7deg); }
+    45%  { transform: translate(-14px, -20px) rotate(-0.4deg); }
+    60%  { transform: translate(16px, 18px) rotate(0.5deg); }
+    75%  { transform: translate(-20px, -8px) rotate(-0.8deg); }
+    100% { transform: translate(18px, 12px) rotate(0.3deg); }
+}
+
+/* слой с лицом + зум */
+#faceWrap {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    will-change: transform;
+    transform: scale(0.35);
+    animation: faceRush 1.9s cubic-bezier(0.75, 0, 0.95, 0.35) forwards;
+}
+
+@keyframes faceRush {
+    0%   { transform: scale(0.35) rotate(0deg); }
+    30%  { transform: scale(0.7) rotate(-3deg); }
+    55%  { transform: scale(1.4) rotate(4deg); }
+    75%  { transform: scale(2.6) rotate(-5deg); }
+    100% { transform: scale(6) rotate(2deg); }
 }
 
 #face {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    animation: faceStrobe 0.09s infinite;
-    filter: contrast(1.4) saturate(1.3);
+    width: 92vmin;
+    height: 92vmin;
+    max-width: 92vw;
+    max-height: 92vw;
+    filter: contrast(1.5) saturate(1.2) brightness(1.05);
+    animation: faceStrobe 0.06s infinite;
 }
 
 @keyframes faceStrobe {
-    0%   { filter: brightness(1.1) contrast(1.4) saturate(1.3); }
-    50%  { filter: brightness(0.4) contrast(2) saturate(1.6) hue-rotate(-15deg); }
-    100% { filter: brightness(1.3) contrast(1.5) saturate(1.3); }
+    0%   { filter: brightness(1.1) contrast(1.6) saturate(1.2); }
+    40%  { filter: brightness(0.3) contrast(2.4) saturate(1.8) hue-rotate(-18deg); }
+    70%  { filter: brightness(1.4) contrast(1.7) saturate(1.1); }
+    100% { filter: brightness(0.6) contrast(2) saturate(1.5) hue-rotate(8deg); }
 }
 
+/* хроматическая аберрация — дублируем слой */
+#faceGhost {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    mix-blend-mode: screen;
+    opacity: 0.55;
+    pointer-events: none;
+    animation: ghostJitter 0.05s infinite;
+    transform: scale(0.35);
+    animation-name: ghostRush;
+    animation-duration: 1.9s;
+    animation-timing-function: cubic-bezier(0.75, 0, 0.95, 0.35);
+    animation-fill-mode: forwards;
+}
+
+#faceGhost svg {
+    width: 92vmin;
+    height: 92vmin;
+    max-width: 92vw;
+    max-height: 92vw;
+    filter: drop-shadow(6px 0 0 #ff0000) drop-shadow(-6px 0 0 #00ffff);
+}
+
+@keyframes ghostJitter {
+    0%   { transform: translate(0, 0); }
+    33%  { transform: translate(-8px, 6px); }
+    66%  { transform: translate(10px, -6px); }
+    100% { transform: translate(-6px, -8px); }
+}
+
+@keyframes ghostRush {
+    0%   { transform: scale(0.35); }
+    30%  { transform: scale(0.7); }
+    55%  { transform: scale(1.4); }
+    75%  { transform: scale(2.6); }
+    100% { transform: scale(6.3); }
+}
+
+/* красная заливка поверх */
 #scream .redflash {
     position: absolute;
     inset: 0;
-    background: #6a0000;
+    background: #7a0000;
     mix-blend-mode: multiply;
-    animation: redFlash 0.12s infinite;
+    animation: redFlash 0.09s infinite;
     pointer-events: none;
 }
 
 @keyframes redFlash {
-    0%, 100% { opacity: 0.15; }
-    50% { opacity: 0.55; }
+    0%, 100% { opacity: 0.2; }
+    50% { opacity: 0.75; }
 }
 
 #scream .scanlines {
@@ -131,8 +196,9 @@ html, body {
     background: repeating-linear-gradient(to bottom,
         rgba(0,0,0,0.55) 0px, rgba(0,0,0,0.55) 2px,
         transparent 2px, transparent 4px);
-    animation: scanMove 0.08s linear infinite;
+    animation: scanMove 0.07s linear infinite;
     pointer-events: none;
+    z-index: 3;
 }
 
 @keyframes scanMove {
@@ -144,19 +210,36 @@ html, body {
     position: absolute;
     inset: 0;
     background: repeating-linear-gradient(45deg,
-        rgba(255,255,255,0.06) 0px, rgba(255,255,255,0.06) 1px,
+        rgba(255,255,255,0.08) 0px, rgba(255,255,255,0.08) 1px,
         transparent 1px, transparent 2px);
-    animation: noiseMove 0.05s steps(4) infinite;
+    animation: noiseMove 0.045s steps(4) infinite;
     mix-blend-mode: screen;
     pointer-events: none;
+    z-index: 4;
 }
 
 @keyframes noiseMove {
     0%   { transform: translate(0, 0); }
-    25%  { transform: translate(-4px, 4px); }
-    50%  { transform: translate(4px, -4px); }
-    75%  { transform: translate(-4px, -4px); }
-    100% { transform: translate(4px, 4px); }
+    25%  { transform: translate(-6px, 6px); }
+    50%  { transform: translate(6px, -6px); }
+    75%  { transform: translate(-6px, -6px); }
+    100% { transform: translate(6px, 6px); }
+}
+
+/* белые вспышки */
+#scream .whiteFlash {
+    position: absolute;
+    inset: 0;
+    background: #fff;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 5;
+    animation: whiteFlash 0.9s steps(1) infinite;
+}
+
+@keyframes whiteFlash {
+    0%, 88%, 100% { opacity: 0; }
+    90%, 92%      { opacity: 0.85; }
 }
 
 /* ===== ФАЗА 3: ТИШИНА И НАДПИСЬ ===== */
@@ -197,9 +280,7 @@ html, body {
     animation: blink 1s steps(1) infinite;
 }
 
-@keyframes blink {
-    50% { opacity: 0; }
-}
+@keyframes blink { 50% { opacity: 0; } }
 
 #ending .subtext {
     margin-top: 40px;
@@ -225,90 +306,191 @@ html, body {
 
 <!-- ФАЗА 2: СКРИМЕР -->
 <div id="scream">
-    <svg id="face" viewBox="0 0 500 600" preserveAspectRatio="xMidYMid slice">
-        <defs>
-            <radialGradient id="skinGrad" cx="50%" cy="40%" r="70%">
-                <stop offset="0%" stop-color="#c9b8a0"/>
-                <stop offset="55%" stop-color="#8a7258"/>
-                <stop offset="100%" stop-color="#2a1a10"/>
-            </radialGradient>
-            <radialGradient id="eyeGlow" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stop-color="#ff0000"/>
-                <stop offset="60%" stop-color="#8a0000"/>
-                <stop offset="100%" stop-color="#000"/>
-            </radialGradient>
-            <filter id="rough">
-                <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2"/>
-                <feDisplacementMap in="SourceGraphic" scale="4"/>
-            </filter>
-        </defs>
 
-        <!-- фон -->
-        <rect width="500" height="600" fill="#000"/>
+    <!-- основной слой -->
+    <div id="faceWrap">
+        <svg id="face" viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <radialGradient id="skin" cx="50%" cy="38%" r="72%">
+                    <stop offset="0%" stop-color="#d8c8b0"/>
+                    <stop offset="45%" stop-color="#9a8268"/>
+                    <stop offset="78%" stop-color="#4a3020"/>
+                    <stop offset="100%" stop-color="#100804"/>
+                </radialGradient>
+                <radialGradient id="socket" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="#ff1818"/>
+                    <stop offset="45%" stop-color="#8a0000"/>
+                    <stop offset="100%" stop-color="#000"/>
+                </radialGradient>
+                <radialGradient id="mouthInner" cx="50%" cy="40%" r="60%">
+                    <stop offset="0%" stop-color="#5a0000"/>
+                    <stop offset="70%" stop-color="#1a0000"/>
+                    <stop offset="100%" stop-color="#000"/>
+                </radialGradient>
+                <filter id="rough">
+                    <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" seed="7"/>
+                    <feDisplacementMap in="SourceGraphic" scale="5"/>
+                </filter>
+                <filter id="glow">
+                    <feGaussianBlur stdDeviation="2.5" result="b"/>
+                    <feMerge>
+                        <feMergeNode in="b"/>
+                        <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                </filter>
+                <filter id="fleshy">
+                    <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="4" seed="3"/>
+                    <feDisplacementMap in="SourceGraphic" scale="14"/>
+                </filter>
+            </defs>
 
-        <!-- голова -->
-        <ellipse cx="250" cy="270" rx="160" ry="220" fill="url(#skinGrad)" filter="url(#rough)"/>
+            <!-- фон -->
+            <rect width="400" height="500" fill="#000"/>
 
-        <!-- трещины по коже -->
-        <path d="M140 180 Q160 220 150 260 Q145 290 160 320" stroke="#3a1a0a" stroke-width="2" fill="none" opacity="0.7"/>
-        <path d="M360 200 Q350 250 365 300" stroke="#3a1a0a" stroke-width="2" fill="none" opacity="0.7"/>
-        <path d="M200 400 Q220 430 210 470" stroke="#3a1a0a" stroke-width="2" fill="none" opacity="0.6"/>
+            <!-- шея и плечи -->
+            <path d="M100 500 Q120 420 160 400 L240 400 Q280 420 300 500 Z" fill="#3a2418"/>
+            <path d="M120 500 Q140 440 170 420 L230 420 Q260 440 280 500" 
+                  fill="none" stroke="#1a0a05" stroke-width="2" opacity="0.7"/>
 
-        <!-- глазницы -->
-        <ellipse cx="180" cy="240" rx="48" ry="60" fill="#000"/>
-        <ellipse cx="320" cy="240" rx="48" ry="60" fill="#000"/>
+            <!-- голова — неровная, вытянутая -->
+            <path d="M200 45
+                     C 130 45, 72 105, 68 185
+                     C 64 245, 78 305, 96 348
+                     C 108 385, 130 425, 158 452
+                     L 200 468
+                     L 242 452
+                     C 270 425, 292 385, 304 348
+                     C 322 305, 336 245, 332 185
+                     C 328 105, 270 45, 200 45 Z"
+                  fill="url(#skin)" filter="url(#fleshy)"/>
 
-        <!-- краснота вокруг глаз -->
-        <ellipse cx="180" cy="240" rx="58" ry="72" fill="#3a0000" opacity="0.8"/>
-        <ellipse cx="320" cy="240" rx="58" ry="72" fill="#3a0000" opacity="0.8"/>
+            <!-- впадины щёк -->
+            <ellipse cx="128" cy="298" rx="36" ry="58" fill="#1a0804" opacity="0.55"/>
+            <ellipse cx="272" cy="298" rx="36" ry="58" fill="#1a0804" opacity="0.55"/>
 
-        <!-- светящиеся зрачки -->
-        <circle cx="180" cy="245" r="18" fill="url(#eyeGlow)"/>
-        <circle cx="320" cy="245" r="18" fill="url(#eyeGlow)"/>
-        <circle cx="180" cy="245" r="6" fill="#ffffff"/>
-        <circle cx="320" cy="245" r="6" fill="#ffffff"/>
+            <!-- трещины и вены -->
+            <g stroke="#2a0a04" fill="none" stroke-linecap="round" opacity="0.85">
+                <path d="M118 130 Q135 175 128 220 Q122 250 138 285" stroke-width="2"/>
+                <path d="M282 130 Q265 175 272 220 Q278 250 262 285" stroke-width="2"/>
+                <path d="M172 90 Q186 130 178 175" stroke-width="1.5"/>
+                <path d="M228 90 Q214 130 222 175" stroke-width="1.5"/>
+                <path d="M155 400 Q170 415 165 440" stroke-width="2"/>
+                <path d="M245 400 Q230 415 235 440" stroke-width="2"/>
+                <path d="M200 350 Q210 380 200 405" stroke-width="1.8"/>
+            </g>
 
-        <!-- нос -->
-        <path d="M250 280 L225 345 L275 345 Z" fill="#000"/>
-        <path d="M225 345 Q240 355 250 350 Q260 355 275 345" stroke="#000" stroke-width="3" fill="none"/>
+            <!-- надбровные дуги — тяжёлые -->
+            <path d="M85 158 Q140 128 195 148" stroke="#1a0804" stroke-width="7" fill="none" stroke-linecap="round"/>
+            <path d="M315 158 Q260 128 205 148" stroke="#1a0804" stroke-width="7" fill="none" stroke-linecap="round"/>
 
-        <!-- разинутый рот -->
-        <ellipse cx="250" cy="450" rx="70" ry="95" fill="#000"/>
-        <ellipse cx="250" cy="450" rx="70" ry="95" fill="none" stroke="#5a0000" stroke-width="4"/>
+            <!-- глазницы — большие, чёрные -->
+            <ellipse cx="140" cy="205" rx="58" ry="68" fill="#000" filter="url(#rough)"/>
+            <ellipse cx="260" cy="205" rx="58" ry="68" fill="#000" filter="url(#rough)"/>
 
-        <!-- зубы сверху -->
-        <path d="M185 380 L195 410 L205 380 L215 415 L225 380 L235 418 L245 380
-                 L255 418 L265 380 L275 415 L285 380 L295 410 L305 380"
-              fill="#e8dcc0" stroke="#3a1a0a" stroke-width="1"/>
+            <!-- кровавое свечение внутри -->
+            <ellipse cx="140" cy="205" rx="50" ry="60" fill="url(#socket)" opacity="0.9"/>
+            <ellipse cx="260" cy="205" rx="50" ry="60" fill="url(#socket)" opacity="0.9"/>
 
-        <!-- зубы снизу -->
-        <path d="M190 520 L200 495 L210 520 L220 490 L230 520 L240 488 L250 520
-                 L260 488 L270 520 L280 490 L290 520 L300 495 L310 520"
-              fill="#e8dcc0" stroke="#3a1a0a" stroke-width="1"/>
+            <!-- сетка вен в глазницах -->
+            <g stroke="#3a0000" fill="none" stroke-width="1" opacity="0.9">
+                <path d="M100 190 Q115 195 105 215"/>
+                <path d="M180 190 Q165 195 175 215"/>
+                <path d="M100 220 Q115 225 105 240"/>
+                <path d="M180 220 Q165 225 175 240"/>
+                <path d="M220 190 Q235 195 225 215"/>
+                <path d="M300 190 Q285 195 295 215"/>
+                <path d="M220 220 Q235 225 225 240"/>
+                <path d="M300 220 Q285 225 295 240"/>
+            </g>
 
-        <!-- язык/тёмная глотка -->
-        <ellipse cx="250" cy="480" rx="40" ry="30" fill="#2a0000"/>
+            <!-- зрачки — точки -->
+            <circle cx="140" cy="207" r="6" fill="#ffffff" filter="url(#glow)"/>
+            <circle cx="260" cy="207" r="6" fill="#ffffff" filter="url(#glow)"/>
+            <circle cx="140" cy="207" r="2" fill="#ff0000"/>
+            <circle cx="260" cy="207" r="2" fill="#ff0000"/>
 
-        <!-- кровь из глаз -->
-        <path d="M180 300 Q175 380 185 470" stroke="#6a0000" stroke-width="8" fill="none" opacity="0.9"/>
-        <path d="M320 300 Q325 380 315 470" stroke="#6a0000" stroke-width="8" fill="none" opacity="0.9"/>
-        <path d="M180 300 Q178 400 190 520" stroke="#3a0000" stroke-width="4" fill="none" opacity="0.7"/>
-        <path d="M320 300 Q322 400 310 520" stroke="#3a0000" stroke-width="4" fill="none" opacity="0.7"/>
+            <!-- кровь из глаз — вниз по лицу -->
+            <g fill="none" stroke-linecap="round">
+                <path d="M132 268 Q120 340 138 415 Q146 458 142 490" stroke="#5a0000" stroke-width="6" opacity="0.95"/>
+                <path d="M268 268 Q280 340 262 415 Q254 458 258 490" stroke="#5a0000" stroke-width="6" opacity="0.95"/>
+                <path d="M124 272 Q112 355 130 435" stroke="#3a0000" stroke-width="3" opacity="0.7"/>
+                <path d="M276 272 Q288 355 270 435" stroke="#3a0000" stroke-width="3" opacity="0.7"/>
+            </g>
 
-        <!-- капли крови -->
-        <circle cx="175" cy="500" r="6" fill="#6a0000"/>
-        <circle cx="325" cy="520" r="5" fill="#6a0000"/>
-        <circle cx="185" cy="550" r="4" fill="#3a0000"/>
+            <!-- капли -->
+            <circle cx="128" cy="430" r="4" fill="#5a0000"/>
+            <circle cx="272" cy="445" r="3.5" fill="#5a0000"/>
+            <circle cx="140" cy="470" r="2.5" fill="#3a0000"/>
+            <circle cx="260" cy="478" r="2.5" fill="#3a0000"/>
 
-        <!-- текст на лбу -->
-        <text x="250" y="130" text-anchor="middle" fill="#6a0000"
-              font-family="Courier New" font-size="24" font-weight="bold"
-              letter-spacing="6">НЕ ОГЛЯДЫВАЙСЯ</text>
-    </svg>
+            <!-- нос — две щели -->
+            <path d="M190 275 L200 335 L210 275" fill="#1a0804" opacity="0.85"/>
+            <ellipse cx="192" cy="340" rx="5" ry="8" fill="#000"/>
+            <ellipse cx="208" cy="340" rx="5" ry="8" fill="#000"/>
+            <path d="M170 345 Q200 358 230 345" stroke="#1a0804" stroke-width="2" fill="none" opacity="0.6"/>
+
+            <!-- РОТ — огромный, до ушей -->
+            <path d="M78 385 Q200 335 322 385 Q200 500 78 385 Z" 
+                  fill="url(#mouthInner)" filter="url(#rough)"/>
+            <path d="M78 385 Q200 335 322 385 Q200 500 78 385 Z" 
+                  fill="none" stroke="#5a0000" stroke-width="4"/>
+
+            <!-- зубы сверху — рваные, разные -->
+            <g fill="#e8dcc0" stroke="#2a0a04" stroke-width="1.2">
+                <polygon points="95,388 108,388 103,418"/>
+                <polygon points="112,382 128,378 124,415"/>
+                <polygon points="132,376 150,372 148,412"/>
+                <polygon points="154,370 174,367 172,410"/>
+                <polygon points="178,366 200,364 200,410"/>
+                <polygon points="204,364 226,367 226,410"/>
+                <polygon points="230,367 250,372 250,412"/>
+                <polygon points="254,372 272,378 270,415"/>
+                <polygon points="276,378 292,384 288,415"/>
+                <polygon points="296,384 308,388 302,418"/>
+            </g>
+
+            <!-- зубы снизу -->
+            <g fill="#e8dcc0" stroke="#2a0a04" stroke-width="1.2">
+                <polygon points="92,395 108,395 100,370"/>
+                <polygon points="115,405 133,410 128,375"/>
+                <polygon points="140,415 160,422 158,378"/>
+                <polygon points="168,425 188,432 188,382"/>
+                <polygon points="196,432 216,432 216,384"/>
+                <polygon points="224,428 244,422 244,380"/>
+                <polygon points="252,418 272,412 268,376"/>
+                <polygon points="280,408 296,402 292,372"/>
+                <polygon points="304,398 316,392 310,368"/>
+            </g>
+
+            <!-- клыки — отдельные, длинные -->
+            <polygon points="105,390 118,388 112,440" fill="#f0e4c8" stroke="#2a0a04" stroke-width="1.2"/>
+            <polygon points="295,390 282,388 288,440" fill="#f0e4c8" stroke="#2a0a04" stroke-width="1.2"/>
+
+            <!-- тёмная глотка -->
+            <ellipse cx="200" cy="470" rx="55" ry="18" fill="#000" opacity="0.9"/>
+
+            <!-- кровь изо рта -->
+            <path d="M130 470 Q140 490 145 500" stroke="#5a0000" stroke-width="4" fill="none"/>
+            <path d="M270 470 Q260 490 255 500" stroke="#5a0000" stroke-width="4" fill="none"/>
+
+            <!-- надпись на лбу — неровная, кровавая -->
+            <text x="200" y="105" text-anchor="middle" fill="#7a0a0a"
+                  font-family="Courier New, monospace" font-size="22" font-weight="bold"
+                  letter-spacing="5" opacity="0.95">НЕ ОГЛЯДЫВАЙСЯ</text>
+        </svg>
+    </div>
+
+    <!-- хроматический дубль -->
+    <div id="faceGhost" aria-hidden="true">
+        <svg viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg">
+            <use href="#face" />
+        </svg>
+    </div>
 
     <div class="redflash"></div>
     <div class="scanlines"></div>
     <div class="noise"></div>
+    <div class="whiteFlash"></div>
 </div>
 
 <!-- ФАЗА 3: ФИНАЛ -->
@@ -341,10 +523,8 @@ html, body {
         if (audioCtx.state === "suspended") audioCtx.resume();
     }
 
-    /* зловещий гул во время затишья */
     function playDrone(duration) {
         const now = audioCtx.currentTime;
-
         const osc1 = audioCtx.createOscillator();
         osc1.type = "sine";
         osc1.frequency.value = 42;
@@ -364,18 +544,15 @@ html, body {
         osc2.connect(gain);
         gain.connect(audioCtx.destination);
 
-        osc1.start(now);
-        osc2.start(now);
-        osc1.stop(now + duration);
-        osc2.stop(now + duration);
+        osc1.start(now); osc2.start(now);
+        osc1.stop(now + duration); osc2.stop(now + duration);
     }
 
-    /* сам скрим */
     function playScream() {
         const now = audioCtx.currentTime;
-        const dur = 1.6;
+        const dur = 2.0;
 
-        /* шум */
+        /* ---- шум ---- */
         const buffer = audioCtx.createBuffer(1, audioCtx.sampleRate * dur, audioCtx.sampleRate);
         const data = buffer.getChannelData(0);
         for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
@@ -383,62 +560,67 @@ html, body {
         const noise = audioCtx.createBufferSource();
         noise.buffer = buffer;
 
-        /* жёсткая дисторшн */
+        /* ---- дисторшн ---- */
         const shaper = audioCtx.createWaveShaper();
         const curve = new Float32Array(65536);
         for (let i = 0; i < 65536; i++) {
             const x = (i / 32768) - 1;
-            curve[i] = Math.tanh(x * 6);
+            curve[i] = Math.tanh(x * 7);
         }
         shaper.curve = curve;
 
-        /* полосовой фильтр */
+        /* ---- полосовой ---- */
         const filter = audioCtx.createBiquadFilter();
         filter.type = "bandpass";
-        filter.frequency.setValueAtTime(1800, now);
-        filter.frequency.exponentialRampToValueAtTime(400, now + dur);
-        filter.Q.value = 1.2;
+        filter.frequency.setValueAtTime(2200, now);
+        filter.frequency.exponentialRampToValueAtTime(320, now + dur);
+        filter.Q.value = 1.3;
 
-        const gain = audioCtx.createGain();
-        gain.gain.setValueAtTime(0, now);
-        gain.gain.linearRampToValueAtTime(0.75, now + 0.03);
-        gain.gain.setValueAtTime(0.75, now + dur * 0.7);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + dur);
+        const noiseGain = audioCtx.createGain();
+        noiseGain.gain.setValueAtTime(0, now);
+        noiseGain.gain.linearRampToValueAtTime(0.7, now + 0.03);
+        noiseGain.gain.setValueAtTime(0.7, now + dur * 0.7);
+        noiseGain.gain.exponentialRampToValueAtTime(0.001, now + dur);
 
         noise.connect(shaper);
         shaper.connect(filter);
-        filter.connect(gain);
-        gain.connect(audioCtx.destination);
-
+        filter.connect(noiseGain);
+        noiseGain.connect(audioCtx.destination);
         noise.start(now);
         noise.stop(now + dur);
 
-        /* низкий сабвуфер */
+        /* ---- сабвуфер ---- */
         const sub = audioCtx.createOscillator();
         sub.type = "sawtooth";
-        sub.frequency.setValueAtTime(110, now);
-        sub.frequency.exponentialRampToValueAtTime(28, now + dur);
-
+        sub.frequency.setValueAtTime(130, now);
+        sub.frequency.exponentialRampToValueAtTime(24, now + dur);
         const subGain = audioCtx.createGain();
-        subGain.gain.setValueAtTime(0.55, now);
+        subGain.gain.setValueAtTime(0.6, now);
         subGain.gain.exponentialRampToValueAtTime(0.001, now + dur);
-
         sub.connect(subGain);
         subGain.connect(audioCtx.destination);
+        sub.start(now); sub.stop(now + dur);
 
-        sub.start(now);
-        sub.stop(now + dur);
+        /* ---- высокий вой ---- */
+        const whine = audioCtx.createOscillator();
+        whine.type = "square";
+        whine.frequency.setValueAtTime(3800, now);
+        whine.frequency.linearRampToValueAtTime(2400, now + dur);
+        const whineGain = audioCtx.createGain();
+        whineGain.gain.setValueAtTime(0.06, now);
+        whineGain.gain.exponentialRampToValueAtTime(0.001, now + dur);
+        whine.connect(whineGain);
+        whineGain.connect(audioCtx.destination);
+        whine.start(now); whine.stop(now + dur);
     }
 
     /* ================= СЦЕНАРИЙ ================= */
 
     function start() {
         initAudio();
-
         buildup.classList.add("gone");
         startBtn.style.display = "none";
 
-        /* ---- ЗАТИШЬЕ: 5 секунд ---- */
         const phrases = [
             "ты один?",
             "не оглядывайся",
@@ -446,7 +628,8 @@ html, body {
             "он смотрит",
             "за твоей спиной",
             "он ближе, чем кажется",
-            "не закрывай глаза"
+            "не закрывай глаза",
+            "он уже внутри"
         ];
 
         playDrone(5.2);
@@ -455,19 +638,15 @@ html, body {
         let stillRunning = true;
 
         function nextWhisper() {
-            if (!stillRunning) return;
-            if (pi >= phrases.length) return;
-
+            if (!stillRunning || pi >= phrases.length) return;
             whisper.textContent = phrases[pi];
             whisper.classList.add("on");
             pi++;
-
             setTimeout(function () {
                 whisper.classList.remove("on");
                 if (stillRunning) setTimeout(nextWhisper, 250);
             }, 550);
         }
-
         setTimeout(nextWhisper, 200);
 
         /* ---- СКРИМЕР ---- */
@@ -477,11 +656,10 @@ html, body {
             buildup.style.display = "none";
 
             playScream();
-
             screamBox.classList.add("on");
 
             if (navigator.vibrate) {
-                try { navigator.vibrate([200, 50, 200, 50, 400]); } catch(e) {}
+                try { navigator.vibrate([280, 40, 280, 40, 500, 60, 700]); } catch(e) {}
             }
 
             /* ---- ЗАТИХАНИЕ И ФИНАЛ ---- */
@@ -490,17 +668,14 @@ html, body {
                 screamBox.style.display = "none";
                 ending.classList.add("on");
 
-                /* пауза, чтобы ужас осел */
                 setTimeout(function () {
                     typeFinal("СПОКОЙНОЙ НОЧИ");
                 }, 2200);
 
-            }, 1800);
+            }, 2000);
 
         }, 5000);
     }
-
-    /* ---- медленная печать финальной надписи ---- */
 
     function typeFinal(text) {
         let i = 0;
@@ -510,14 +685,12 @@ html, body {
 
         function step() {
             if (i >= text.length) {
-                /* курсор мигает, потом тухнет */
                 setTimeout(function () {
                     cursor.style.display = "none";
                     subtext.classList.add("on");
                 }, 2500);
                 return;
             }
-
             const ch = text[i];
             cursor.insertAdjacentText("beforebegin", ch);
             i++;
@@ -525,17 +698,12 @@ html, body {
             let delay = 260 + Math.random() * 220;
             if (ch === " ") delay = 700 + Math.random() * 400;
             if (Math.random() < 0.1) delay += 500;
-
             setTimeout(step, delay);
         }
-
         step();
     }
 
-    /* ---- запуск ---- */
-
     startBtn.addEventListener("click", start);
-
 })();
 </script>
 
