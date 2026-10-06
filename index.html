@@ -3,707 +3,730 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>?</title>
+<title>По дороге домой</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400&family=PT+Mono&display=swap" rel="stylesheet">
+
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 html, body {
-    width: 100%;
-    height: 100%;
-    background: #000;
-    overflow: hidden;
-    font-family: "Courier New", monospace;
-    cursor: none;
+  height: 100%;
+  background: #04070d;
+  font-family: "PT Serif", Georgia, serif;
+  color: #8fa5b5;
+  overflow: hidden;
 }
 
-/* ===== ФАЗА 1: ЗАТИШЬЕ ===== */
+/* ============ АТМОСФЕРА ============ */
 
-#buildup {
-    position: fixed;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #000;
-    z-index: 10;
-    transition: opacity 0.4s;
+#bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse at 50% 100%, #0a1420 0%, #04070d 70%),
+    linear-gradient(180deg, #060a12 0%, #020408 100%);
 }
 
-#buildup.gone { opacity: 0; pointer-events: none; }
-
-#buildup .whisper {
-    position: absolute;
-    color: #4a5a4a;
-    font-size: clamp(14px, 2vw, 22px);
-    letter-spacing: 6px;
-    opacity: 0;
-    transition: opacity 1.2s ease;
-    text-transform: uppercase;
-    text-align: center;
-    padding: 0 20px;
+.fog {
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  left: -50%;
+  top: -50%;
+  background:
+    radial-gradient(ellipse at 30% 60%, rgba(60, 90, 120, 0.10) 0%, transparent 42%),
+    radial-gradient(ellipse at 70% 30%, rgba(40, 70, 100, 0.07) 0%, transparent 45%);
+  animation: fogMove 80s linear infinite;
+  pointer-events: none;
+  will-change: transform;
 }
 
-#buildup .whisper.on { opacity: 0.7; }
-
-#startBtn {
-    background: transparent;
-    border: 1px solid #3a5a3a;
-    color: #7ea87e;
-    font-family: "Courier New", monospace;
-    font-size: clamp(14px, 2vw, 20px);
-    padding: 18px 34px;
-    letter-spacing: 4px;
-    cursor: pointer;
-    text-transform: uppercase;
-    transition: all 0.3s;
-    animation: pulse 2s infinite;
+.fog.f2 {
+  animation-duration: 130s;
+  animation-direction: reverse;
+  background:
+    radial-gradient(ellipse at 60% 40%, rgba(50, 80, 110, 0.06) 0%, transparent 50%);
 }
 
-#startBtn:hover {
-    border-color: #7ea87e;
-    color: #b0e0b0;
-    text-shadow: 0 0 12px #7ea87e;
+@keyframes fogMove {
+  0%   { transform: translate(0, 0); }
+  100% { transform: translate(-25%, -18%); }
 }
 
-@keyframes pulse {
-    0%, 100% { opacity: 0.6; }
-    50% { opacity: 1; }
+#rain {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.28;
+  background-image:
+    repeating-linear-gradient(102deg,
+      transparent 0,
+      transparent 2px,
+      rgba(150, 180, 210, 0.14) 2px,
+      rgba(150, 180, 210, 0.14) 3px,
+      transparent 3px,
+      transparent 130px);
+  animation: rainFall 0.7s linear infinite;
+  mix-blend-mode: screen;
 }
 
-/* ===== ФАЗА 2: СКРИМЕР ===== */
-
-#scream {
-    position: fixed;
-    inset: 0;
-    background: #000;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 50;
-    overflow: hidden;
+@keyframes rainFall {
+  0%   { background-position: 0 0; }
+  100% { background-position: -30px 420px; }
 }
 
-#scream.on {
-    display: flex;
-    animation: screenShake 0.035s infinite;
+#vignette {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 22%, rgba(0,0,0,0.55) 78%, rgba(0,0,0,0.95) 100%);
+  transition: background 1.2s ease;
 }
 
-@keyframes screenShake {
-    0%   { transform: translate(0, 0) rotate(0deg); }
-    15%  { transform: translate(-18px, 12px) rotate(-0.6deg); }
-    30%  { transform: translate(20px, -14px) rotate(0.7deg); }
-    45%  { transform: translate(-14px, -20px) rotate(-0.4deg); }
-    60%  { transform: translate(16px, 18px) rotate(0.5deg); }
-    75%  { transform: translate(-20px, -8px) rotate(-0.8deg); }
-    100% { transform: translate(18px, 12px) rotate(0.3deg); }
+#grain {
+  position: fixed;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+  opacity: 0.055;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grainShift 0.45s steps(3) infinite;
 }
 
-/* слой с лицом + зум */
-#faceWrap {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    will-change: transform;
-    transform: scale(0.35);
-    animation: faceRush 1.9s cubic-bezier(0.75, 0, 0.95, 0.35) forwards;
+@keyframes grainShift {
+  0%   { transform: translate(0, 0); }
+  33%  { transform: translate(-2px, 1px); }
+  66%  { transform: translate(2px, -1px); }
+  100% { transform: translate(0, 0); }
 }
 
-@keyframes faceRush {
-    0%   { transform: scale(0.35) rotate(0deg); }
-    30%  { transform: scale(0.7) rotate(-3deg); }
-    55%  { transform: scale(1.4) rotate(4deg); }
-    75%  { transform: scale(2.6) rotate(-5deg); }
-    100% { transform: scale(6) rotate(2deg); }
+/* ============ ТЕКСТ ============ */
+
+#reader {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  padding: 15vh 8vw 35vh;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, black 12%, black 82%, transparent 100%);
+  mask-image: linear-gradient(180deg, transparent 0%, black 12%, black 82%, transparent 100%);
 }
 
-#face {
-    width: 92vmin;
-    height: 92vmin;
-    max-width: 92vw;
-    max-height: 92vw;
-    filter: contrast(1.5) saturate(1.2) brightness(1.05);
-    animation: faceStrobe 0.06s infinite;
+#reader::-webkit-scrollbar { display: none; }
+
+#story {
+  max-width: 720px;
+  margin: 0 auto;
+  font-size: clamp(16px, 1.6vw, 21px);
+  line-height: 1.78;
+  letter-spacing: 0.3px;
 }
 
-@keyframes faceStrobe {
-    0%   { filter: brightness(1.1) contrast(1.6) saturate(1.2); }
-    40%  { filter: brightness(0.3) contrast(2.4) saturate(1.8) hue-rotate(-18deg); }
-    70%  { filter: brightness(1.4) contrast(1.7) saturate(1.1); }
-    100% { filter: brightness(0.6) contrast(2) saturate(1.5) hue-rotate(8deg); }
+.chunk {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 1.6s ease, transform 1.6s ease;
+  margin-bottom: 1.1em;
 }
 
-/* хроматическая аберрация — дублируем слой */
-#faceGhost {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    mix-blend-mode: screen;
-    opacity: 0.55;
-    pointer-events: none;
-    animation: ghostJitter 0.05s infinite;
-    transform: scale(0.35);
-    animation-name: ghostRush;
-    animation-duration: 1.9s;
-    animation-timing-function: cubic-bezier(0.75, 0, 0.95, 0.35);
-    animation-fill-mode: forwards;
+.chunk.show {
+  opacity: 1;
+  transform: translateY(0);
 }
 
-#faceGhost svg {
-    width: 92vmin;
-    height: 92vmin;
-    max-width: 92vw;
-    max-height: 92vw;
-    filter: drop-shadow(6px 0 0 #ff0000) drop-shadow(-6px 0 0 #00ffff);
+.chunk.title {
+  font-family: "PT Mono", monospace;
+  font-size: clamp(26px, 4.2vw, 54px);
+  font-weight: 700;
+  letter-spacing: 8px;
+  text-align: center;
+  color: #c8d8e5;
+  text-shadow:
+    0 0 30px rgba(100, 150, 200, 0.35),
+    0 0 70px rgba(80, 120, 160, 0.25);
+  margin: 0 0 0.4em;
+  text-transform: uppercase;
+  line-height: 1.15;
 }
 
-@keyframes ghostJitter {
-    0%   { transform: translate(0, 0); }
-    33%  { transform: translate(-8px, 6px); }
-    66%  { transform: translate(10px, -6px); }
-    100% { transform: translate(-6px, -8px); }
+.chunk.author {
+  font-family: "PT Mono", monospace;
+  font-size: clamp(12px, 1.2vw, 15px);
+  letter-spacing: 6px;
+  text-align: center;
+  color: #5a7080;
+  text-transform: uppercase;
+  margin-bottom: 4em;
 }
 
-@keyframes ghostRush {
-    0%   { transform: scale(0.35); }
-    30%  { transform: scale(0.7); }
-    55%  { transform: scale(1.4); }
-    75%  { transform: scale(2.6); }
-    100% { transform: scale(6.3); }
+.chunk.p {
+  color: #8fa5b5;
 }
 
-/* красная заливка поверх */
-#scream .redflash {
-    position: absolute;
-    inset: 0;
-    background: #7a0000;
-    mix-blend-mode: multiply;
-    animation: redFlash 0.09s infinite;
-    pointer-events: none;
+.chunk.dlg {
+  color: #a8becd;
+  padding-left: 1.4em;
+  border-left: 2px solid rgba(120, 160, 190, 0.18);
+  font-style: italic;
 }
 
-@keyframes redFlash {
-    0%, 100% { opacity: 0.2; }
-    50% { opacity: 0.75; }
+.chunk.emph {
+  color: #c8dcea;
+  font-size: 1.05em;
+  letter-spacing: 0.6px;
+  text-shadow: 0 0 22px rgba(140, 180, 210, 0.3);
+  margin: 1.6em 0;
 }
 
-#scream .scanlines {
-    position: absolute;
-    inset: 0;
-    background: repeating-linear-gradient(to bottom,
-        rgba(0,0,0,0.55) 0px, rgba(0,0,0,0.55) 2px,
-        transparent 2px, transparent 4px);
-    animation: scanMove 0.07s linear infinite;
-    pointer-events: none;
-    z-index: 3;
+.chunk.scary {
+  color: #b85a5a;
+  font-size: 1.1em;
+  letter-spacing: 0.9px;
+  text-shadow: 0 0 22px rgba(180, 60, 60, 0.5), 0 0 44px rgba(150, 40, 40, 0.25);
+  margin: 1.6em 0;
 }
 
-@keyframes scanMove {
-    0% { transform: translateY(0); }
-    100% { transform: translateY(4px); }
+.chunk.pause {
+  height: 0.4em;
+  margin-bottom: 1.8em;
 }
 
-#scream .noise {
-    position: absolute;
-    inset: 0;
-    background: repeating-linear-gradient(45deg,
-        rgba(255,255,255,0.08) 0px, rgba(255,255,255,0.08) 1px,
-        transparent 1px, transparent 2px);
-    animation: noiseMove 0.045s steps(4) infinite;
-    mix-blend-mode: screen;
-    pointer-events: none;
-    z-index: 4;
+.chunk.final {
+  color: #d04040;
+  font-size: 1.28em;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-shadow: 0 0 30px rgba(200, 50, 50, 0.7), 0 0 70px rgba(200, 50, 50, 0.35);
+  animation: finalPulse 2.4s ease-in-out infinite;
+  margin: 1.8em 0;
 }
 
-@keyframes noiseMove {
-    0%   { transform: translate(0, 0); }
-    25%  { transform: translate(-6px, 6px); }
-    50%  { transform: translate(6px, -6px); }
-    75%  { transform: translate(-6px, -6px); }
-    100% { transform: translate(6px, 6px); }
+@keyframes finalPulse {
+  0%, 100% { text-shadow: 0 0 28px rgba(200, 50, 50, 0.5), 0 0 60px rgba(200, 50, 50, 0.2); }
+  50%      { text-shadow: 0 0 44px rgba(220, 60, 60, 0.85), 0 0 90px rgba(200, 50, 50, 0.5); }
 }
 
-/* белые вспышки */
-#scream .whiteFlash {
-    position: absolute;
-    inset: 0;
-    background: #fff;
-    opacity: 0;
-    pointer-events: none;
-    z-index: 5;
-    animation: whiteFlash 0.9s steps(1) infinite;
+/* ============ СТАРТОВЫЙ ЭКРАН ============ */
+
+#start {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #04070d;
+  transition: opacity 1.8s ease;
+  cursor: pointer;
+  padding: 20px;
+  text-align: center;
 }
 
-@keyframes whiteFlash {
-    0%, 88%, 100% { opacity: 0; }
-    90%, 92%      { opacity: 0.85; }
+#start.gone {
+  opacity: 0;
+  pointer-events: none;
 }
 
-/* ===== ФАЗА 3: ТИШИНА И НАДПИСЬ ===== */
-
-#ending {
-    position: fixed;
-    inset: 0;
-    background: #000;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 100;
-    flex-direction: column;
+#start .prelude {
+  color: #4a6070;
+  font-family: "PT Mono", monospace;
+  font-size: clamp(12px, 1.3vw, 15px);
+  letter-spacing: 10px;
+  text-transform: uppercase;
+  margin-bottom: 46px;
+  animation: fadePulse 3s ease-in-out infinite;
 }
 
-#ending.on { display: flex; }
-
-#finalText {
-    font-family: "Courier New", monospace;
-    font-size: clamp(24px, 6vw, 72px);
-    color: #b0b0b0;
-    letter-spacing: 12px;
-    text-transform: uppercase;
-    text-align: center;
-    padding: 0 20px;
-    text-shadow: 0 0 20px rgba(180, 180, 180, 0.4);
-    font-weight: bold;
-    white-space: nowrap;
+#start .title-pre {
+  color: #a8becd;
+  font-family: "PT Mono", monospace;
+  font-size: clamp(22px, 3.2vw, 40px);
+  letter-spacing: 12px;
+  text-transform: uppercase;
+  margin-bottom: 40px;
+  text-shadow: 0 0 30px rgba(120, 160, 200, 0.45);
 }
 
-#finalText .cursor {
-    display: inline-block;
-    width: 0.55em;
-    height: 1em;
-    background: #b0b0b0;
-    vertical-align: -0.12em;
-    margin-left: 0.15em;
-    animation: blink 1s steps(1) infinite;
+#start .hint {
+  color: #465a68;
+  font-family: "PT Mono", monospace;
+  font-size: clamp(11px, 1.1vw, 13px);
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  margin-top: 60px;
+  animation: fadePulse 2.5s ease-in-out infinite;
 }
 
-@keyframes blink { 50% { opacity: 0; } }
-
-#ending .subtext {
-    margin-top: 40px;
-    font-size: clamp(12px, 1.6vw, 16px);
-    color: #444;
-    letter-spacing: 4px;
-    opacity: 0;
-    transition: opacity 2s ease;
-    text-transform: lowercase;
+@keyframes fadePulse {
+  0%, 100% { opacity: 0.35; }
+  50%      { opacity: 1; }
 }
 
-#ending .subtext.on { opacity: 0.7; }
+/* ============ КНОПКА ЗВУКА ============ */
+
+#soundToggle {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 30;
+  background: transparent;
+  border: 1px solid rgba(120, 160, 200, 0.25);
+  color: #6a8090;
+  font-family: "PT Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 3px;
+  padding: 8px 14px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s;
+  opacity: 0.55;
+}
+
+#soundToggle:hover {
+  opacity: 1;
+  color: #a8becd;
+  border-color: rgba(160, 200, 240, 0.55);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fog, #rain, #grain, .chunk.final { animation: none !important; }
+  .chunk { transition-duration: 0.4s; }
+}
 </style>
 </head>
 
 <body>
 
-<!-- ФАЗА 1 -->
-<div id="buildup">
-    <div class="whisper" id="whisper">ты один?</div>
-    <button id="startBtn">нажми, если не боишься</button>
+<div id="bg">
+  <div class="fog"></div>
+  <div class="fog f2"></div>
+</div>
+<div id="rain"></div>
+<div id="vignette"></div>
+<div id="grain"></div>
+
+<div id="reader">
+  <div id="story"></div>
 </div>
 
-<!-- ФАЗА 2: СКРИМЕР -->
-<div id="scream">
-
-    <!-- основной слой -->
-    <div id="faceWrap">
-        <svg id="face" viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-                <radialGradient id="skin" cx="50%" cy="38%" r="72%">
-                    <stop offset="0%" stop-color="#d8c8b0"/>
-                    <stop offset="45%" stop-color="#9a8268"/>
-                    <stop offset="78%" stop-color="#4a3020"/>
-                    <stop offset="100%" stop-color="#100804"/>
-                </radialGradient>
-                <radialGradient id="socket" cx="50%" cy="50%" r="50%">
-                    <stop offset="0%" stop-color="#ff1818"/>
-                    <stop offset="45%" stop-color="#8a0000"/>
-                    <stop offset="100%" stop-color="#000"/>
-                </radialGradient>
-                <radialGradient id="mouthInner" cx="50%" cy="40%" r="60%">
-                    <stop offset="0%" stop-color="#5a0000"/>
-                    <stop offset="70%" stop-color="#1a0000"/>
-                    <stop offset="100%" stop-color="#000"/>
-                </radialGradient>
-                <filter id="rough">
-                    <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" seed="7"/>
-                    <feDisplacementMap in="SourceGraphic" scale="5"/>
-                </filter>
-                <filter id="glow">
-                    <feGaussianBlur stdDeviation="2.5" result="b"/>
-                    <feMerge>
-                        <feMergeNode in="b"/>
-                        <feMergeNode in="SourceGraphic"/>
-                    </feMerge>
-                </filter>
-                <filter id="fleshy">
-                    <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="4" seed="3"/>
-                    <feDisplacementMap in="SourceGraphic" scale="14"/>
-                </filter>
-            </defs>
-
-            <!-- фон -->
-            <rect width="400" height="500" fill="#000"/>
-
-            <!-- шея и плечи -->
-            <path d="M100 500 Q120 420 160 400 L240 400 Q280 420 300 500 Z" fill="#3a2418"/>
-            <path d="M120 500 Q140 440 170 420 L230 420 Q260 440 280 500" 
-                  fill="none" stroke="#1a0a05" stroke-width="2" opacity="0.7"/>
-
-            <!-- голова — неровная, вытянутая -->
-            <path d="M200 45
-                     C 130 45, 72 105, 68 185
-                     C 64 245, 78 305, 96 348
-                     C 108 385, 130 425, 158 452
-                     L 200 468
-                     L 242 452
-                     C 270 425, 292 385, 304 348
-                     C 322 305, 336 245, 332 185
-                     C 328 105, 270 45, 200 45 Z"
-                  fill="url(#skin)" filter="url(#fleshy)"/>
-
-            <!-- впадины щёк -->
-            <ellipse cx="128" cy="298" rx="36" ry="58" fill="#1a0804" opacity="0.55"/>
-            <ellipse cx="272" cy="298" rx="36" ry="58" fill="#1a0804" opacity="0.55"/>
-
-            <!-- трещины и вены -->
-            <g stroke="#2a0a04" fill="none" stroke-linecap="round" opacity="0.85">
-                <path d="M118 130 Q135 175 128 220 Q122 250 138 285" stroke-width="2"/>
-                <path d="M282 130 Q265 175 272 220 Q278 250 262 285" stroke-width="2"/>
-                <path d="M172 90 Q186 130 178 175" stroke-width="1.5"/>
-                <path d="M228 90 Q214 130 222 175" stroke-width="1.5"/>
-                <path d="M155 400 Q170 415 165 440" stroke-width="2"/>
-                <path d="M245 400 Q230 415 235 440" stroke-width="2"/>
-                <path d="M200 350 Q210 380 200 405" stroke-width="1.8"/>
-            </g>
-
-            <!-- надбровные дуги — тяжёлые -->
-            <path d="M85 158 Q140 128 195 148" stroke="#1a0804" stroke-width="7" fill="none" stroke-linecap="round"/>
-            <path d="M315 158 Q260 128 205 148" stroke="#1a0804" stroke-width="7" fill="none" stroke-linecap="round"/>
-
-            <!-- глазницы — большие, чёрные -->
-            <ellipse cx="140" cy="205" rx="58" ry="68" fill="#000" filter="url(#rough)"/>
-            <ellipse cx="260" cy="205" rx="58" ry="68" fill="#000" filter="url(#rough)"/>
-
-            <!-- кровавое свечение внутри -->
-            <ellipse cx="140" cy="205" rx="50" ry="60" fill="url(#socket)" opacity="0.9"/>
-            <ellipse cx="260" cy="205" rx="50" ry="60" fill="url(#socket)" opacity="0.9"/>
-
-            <!-- сетка вен в глазницах -->
-            <g stroke="#3a0000" fill="none" stroke-width="1" opacity="0.9">
-                <path d="M100 190 Q115 195 105 215"/>
-                <path d="M180 190 Q165 195 175 215"/>
-                <path d="M100 220 Q115 225 105 240"/>
-                <path d="M180 220 Q165 225 175 240"/>
-                <path d="M220 190 Q235 195 225 215"/>
-                <path d="M300 190 Q285 195 295 215"/>
-                <path d="M220 220 Q235 225 225 240"/>
-                <path d="M300 220 Q285 225 295 240"/>
-            </g>
-
-            <!-- зрачки — точки -->
-            <circle cx="140" cy="207" r="6" fill="#ffffff" filter="url(#glow)"/>
-            <circle cx="260" cy="207" r="6" fill="#ffffff" filter="url(#glow)"/>
-            <circle cx="140" cy="207" r="2" fill="#ff0000"/>
-            <circle cx="260" cy="207" r="2" fill="#ff0000"/>
-
-            <!-- кровь из глаз — вниз по лицу -->
-            <g fill="none" stroke-linecap="round">
-                <path d="M132 268 Q120 340 138 415 Q146 458 142 490" stroke="#5a0000" stroke-width="6" opacity="0.95"/>
-                <path d="M268 268 Q280 340 262 415 Q254 458 258 490" stroke="#5a0000" stroke-width="6" opacity="0.95"/>
-                <path d="M124 272 Q112 355 130 435" stroke="#3a0000" stroke-width="3" opacity="0.7"/>
-                <path d="M276 272 Q288 355 270 435" stroke="#3a0000" stroke-width="3" opacity="0.7"/>
-            </g>
-
-            <!-- капли -->
-            <circle cx="128" cy="430" r="4" fill="#5a0000"/>
-            <circle cx="272" cy="445" r="3.5" fill="#5a0000"/>
-            <circle cx="140" cy="470" r="2.5" fill="#3a0000"/>
-            <circle cx="260" cy="478" r="2.5" fill="#3a0000"/>
-
-            <!-- нос — две щели -->
-            <path d="M190 275 L200 335 L210 275" fill="#1a0804" opacity="0.85"/>
-            <ellipse cx="192" cy="340" rx="5" ry="8" fill="#000"/>
-            <ellipse cx="208" cy="340" rx="5" ry="8" fill="#000"/>
-            <path d="M170 345 Q200 358 230 345" stroke="#1a0804" stroke-width="2" fill="none" opacity="0.6"/>
-
-            <!-- РОТ — огромный, до ушей -->
-            <path d="M78 385 Q200 335 322 385 Q200 500 78 385 Z" 
-                  fill="url(#mouthInner)" filter="url(#rough)"/>
-            <path d="M78 385 Q200 335 322 385 Q200 500 78 385 Z" 
-                  fill="none" stroke="#5a0000" stroke-width="4"/>
-
-            <!-- зубы сверху — рваные, разные -->
-            <g fill="#e8dcc0" stroke="#2a0a04" stroke-width="1.2">
-                <polygon points="95,388 108,388 103,418"/>
-                <polygon points="112,382 128,378 124,415"/>
-                <polygon points="132,376 150,372 148,412"/>
-                <polygon points="154,370 174,367 172,410"/>
-                <polygon points="178,366 200,364 200,410"/>
-                <polygon points="204,364 226,367 226,410"/>
-                <polygon points="230,367 250,372 250,412"/>
-                <polygon points="254,372 272,378 270,415"/>
-                <polygon points="276,378 292,384 288,415"/>
-                <polygon points="296,384 308,388 302,418"/>
-            </g>
-
-            <!-- зубы снизу -->
-            <g fill="#e8dcc0" stroke="#2a0a04" stroke-width="1.2">
-                <polygon points="92,395 108,395 100,370"/>
-                <polygon points="115,405 133,410 128,375"/>
-                <polygon points="140,415 160,422 158,378"/>
-                <polygon points="168,425 188,432 188,382"/>
-                <polygon points="196,432 216,432 216,384"/>
-                <polygon points="224,428 244,422 244,380"/>
-                <polygon points="252,418 272,412 268,376"/>
-                <polygon points="280,408 296,402 292,372"/>
-                <polygon points="304,398 316,392 310,368"/>
-            </g>
-
-            <!-- клыки — отдельные, длинные -->
-            <polygon points="105,390 118,388 112,440" fill="#f0e4c8" stroke="#2a0a04" stroke-width="1.2"/>
-            <polygon points="295,390 282,388 288,440" fill="#f0e4c8" stroke="#2a0a04" stroke-width="1.2"/>
-
-            <!-- тёмная глотка -->
-            <ellipse cx="200" cy="470" rx="55" ry="18" fill="#000" opacity="0.9"/>
-
-            <!-- кровь изо рта -->
-            <path d="M130 470 Q140 490 145 500" stroke="#5a0000" stroke-width="4" fill="none"/>
-            <path d="M270 470 Q260 490 255 500" stroke="#5a0000" stroke-width="4" fill="none"/>
-
-            <!-- надпись на лбу — неровная, кровавая -->
-            <text x="200" y="105" text-anchor="middle" fill="#7a0a0a"
-                  font-family="Courier New, monospace" font-size="22" font-weight="bold"
-                  letter-spacing="5" opacity="0.95">НЕ ОГЛЯДЫВАЙСЯ</text>
-        </svg>
-    </div>
-
-    <!-- хроматический дубль -->
-    <div id="faceGhost" aria-hidden="true">
-        <svg viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg">
-            <use href="#face" />
-        </svg>
-    </div>
-
-    <div class="redflash"></div>
-    <div class="scanlines"></div>
-    <div class="noise"></div>
-    <div class="whiteFlash"></div>
+<div id="start">
+  <div class="prelude">Night Babka</div>
+  <div class="title-pre">По дороге домой</div>
+  <div class="hint">нажми, чтобы начать</div>
 </div>
 
-<!-- ФАЗА 3: ФИНАЛ -->
-<div id="ending">
-    <div id="finalText"></div>
-    <div class="subtext" id="subtext">засыпай...</div>
-</div>
+<button id="soundToggle" type="button">звук: выкл</button>
 
 <script>
 (function () {
-    "use strict";
+  "use strict";
 
-    const buildup   = document.getElementById("buildup");
-    const whisper   = document.getElementById("whisper");
-    const startBtn  = document.getElementById("startBtn");
-    const screamBox = document.getElementById("scream");
-    const ending    = document.getElementById("ending");
-    const finalText = document.getElementById("finalText");
-    const subtext   = document.getElementById("subtext");
+  /* ============================================================
+     ИСТОРИЯ
+     Форматы:
+       "title"  — заголовок
+       "author" — автор
+       "p"      — обычный абзац
+       "dlg"    — реплика (диалог)
+       "emph"   — акцент, короткая сильная строка
+       "scary"  — страшный момент (тревожный красный)
+       "final"  — финальные строки (сильное свечение)
+       "pause"  — пустая пауза
+     ============================================================ */
 
-    /* ================= АУДИО ================= */
+  const STORY = [
+    ["title", "По дороге домой"],
+    ["author", "Night Babka"],
+    ["pause", ""],
 
-    let audioCtx = null;
+    ["p", "Егор жил в небольшом посёлке недалеко от промышленного города."],
+    ["p", "Каждый день он ездил в город на работу. Дома его ждали больной отец и младшая сестра Аня."],
+    ["p", "Егор работал на складе."],
+    ["p", "По утрам и вечерам он постоянно видел тот самый служебный автобус, который возил рабочих на смену. Сам он никогда на нём не ездил."],
+    ["p", "В тот вечер он задержался допоздна. На улице шёл сильный осенний дождь."],
+    ["p", "Обычный транспорт уже ушёл, и Егор решил попробовать добраться домой на служебном автобусе."],
+    ["p", "На остановке как раз стоял старый ПАЗ."],
+    ["p", "Егор подошёл к двери."],
+    ["p", "Водитель посмотрел на него и молча открыл."],
 
-    function initAudio() {
-        if (!audioCtx) {
-            const Ctx = window.AudioContext || window.webkitAudioContext;
-            audioCtx = new Ctx();
-        }
-        if (audioCtx.state === "suspended") audioCtx.resume();
+    ["dlg", "— До посёлка довезёшь?"],
+    ["dlg", "— До ТЭЦ еду. Рабочих высажу, потом в депо. Если тебе по пути, подброшу."],
+
+    ["p", "Егор кивнул и поднялся в салон."],
+    ["p", "Автобус тронулся."],
+    ["p", "В салоне сидели рабочие. Все молчали."],
+    ["p", "За окнами мелькали мокрые улицы."],
+    ["emph", "Вдруг впереди кто-то странно закашлялся."],
+    ["p", "Егор поднял глаза."],
+    ["p", "Это была женщина с длинными волосами."],
+    ["emph", "Она снова кашлянула."],
+    ["p", "Егор отвернулся к окну."],
+    ["p", "Автобус продолжал ехать."],
+    ["p", "Вскоре они подъехали к ТЭЦ."],
+    ["p", "Рабочие начали выходить."],
+    ["p", "Егор остался сидеть."],
+    ["p", "Последней вышла та женщина. Перед тем как спуститься, она снова тихо кашлянула."],
+    ["p", "Двери закрылись."],
+    ["p", "Теперь в автобусе остались только Егор и водитель."],
+    ["p", "Водитель повёл автобус дальше."],
+    ["p", "Некоторое время он что-то тихо бормотал себе под нос."],
+    ["p", "Егор несколько раз пытался разобрать слова, но из-за гула двигателя ничего не получалось."],
+    ["p", "За окнами становилось всё темнее."],
+    ["p", "Дорога уходила всё дальше от города."],
+    ["p", "Дождь продолжал барабанить по крыше."],
+    ["p", "Водитель время от времени поглядывал в зеркало."],
+    ["p", "Егор смотрел в окно."],
+    ["p", "Вскоре впереди показался поворот к садам."],
+    ["emph", "И вдруг дождь резко закончился."],
+    ["p", "Ещё секунду назад вода лупила по крыше и стёклам, а теперь стало абсолютно тихо."],
+    ["emph", "Ни дождя."],
+    ["emph", "Ни ветра."],
+    ["p", "Только ровный гул двигателя."],
+    ["p", "Автобус дёрнулся."],
+    ["p", "Двигатель захлебнулся."],
+    ["p", "Ещё один рывок."],
+    ["emph", "И заглох."],
+    ["p", "Водитель несколько раз попытался завести автобус."],
+    ["p", "Стартер крутил, но двигатель не схватывал."],
+    ["p", "Водитель вышел из автобуса, открыл капот и некоторое время что-то проверял."],
+    ["p", "Потом захлопнул капот и вернулся в салон."],
+
+    ["dlg", "— Всё. Надолго."],
+    ["p", "Егор посмотрел на него."],
+    ["dlg", "— И что теперь?"],
+    ["p", "Водитель взглянул в сторону садов."],
+    ["dlg", "— Пешком пойдёшь."],
+    ["dlg", "— А далеко?"],
+    ["dlg", "— Да недалеко. Прямо вдоль садов, потом направо. Минут десять."],
+    ["p", "Егор посмотрел в окно."],
+    ["p", "За заборами была почти полная темнота."],
+    ["dlg", "— Тут точно дорога есть?"],
+    ["dlg", "— Есть."],
+    ["p", "Водитель немного помолчал."],
+    ["scary", "— Иди прямо. Только внутрь садов не заходи."],
+    ["p", "Егор встал и пошёл к выходу."],
+    ["p", "У самой двери он обернулся."],
+    ["p", "Водитель сидел за рулём и смотрел на него через лобовое стекло."],
+    ["p", "Егор на секунду встретился с ним взглядом."],
+    ["p", "Водитель ничего не сказал."],
+    ["p", "Егор вышел."],
+    ["emph", "Дверь за его спиной закрылась сама."],
+    ["p", "ПАЗ ещё несколько секунд стоял на месте."],
+    ["p", "Потом двигатель неожиданно завёлся."],
+    ["emph", "С первого раза."],
+    ["p", "Водитель включил фары и поехал дальше."],
+    ["p", "Егор остановился."],
+    ["p", "ПАЗ удалялся, пока красные огни не исчезли в темноте."],
+    ["p", "Вокруг было тихо. Только под ногами хлюпала мокрая земля."],
+    ["p", "Слева за заборами темнели садовые домики."],
+
+    ["pause", ""],
+    ["p", "Через несколько минут зазвонил телефон."],
+    ["emph", "Аня."],
+    ["p", "Егор ответил."],
+    ["dlg", "— Да?"],
+    ["p", "В ответ сначала послышался только шум."],
+    ["dlg", "— Егор... ты где?"],
+    ["dlg", "— Иду уже. Что случилось?"],
+    ["p", "Несколько секунд была тишина."],
+    ["scary", "— ...папа..."],
+    ["dlg", "— Что? Я не понял. Повтори."],
+    ["emph", "Связь оборвалась."],
+    ["p", "Егор посмотрел на экран."],
+    ["p", "Сигнала почти не было."],
+    ["p", "Он убрал телефон."],
+    ["scary", "И тогда Егор услышал плач."],
+    ["p", "Тихий, надрывный."],
+    ["p", "Где-то между садовыми домиками."],
+    ["p", "Егор остановился."],
+    ["p", "Он пошёл на звук и вскоре увидел открытую калитку."],
+    ["p", "За ней, между двумя тёмными домиками, стоял невысокий силуэт спиной к нему."],
+    ["p", "Длинные волосы свисали почти до самой земли."],
+    ["emph", "Егор замер."],
+    ["p", "Егор узнал голос из телефона."],
+    ["dlg", "— Аня? — тихо позвал он."],
+    ["p", "Плач оборвался."],
+    ["p", "Силуэт медленно повернулся к нему."],
+    ["p", "Длинные волосы закрывали лицо."],
+    ["p", "Егор несколько секунд стоял у калитки."],
+    ["p", "Потом сделал шаг внутрь."],
+    ["emph", "Под ногами больше не хлюпало."],
+    ["emph", "Земля была сухой."],
+    ["p", "Он сделал ещё несколько шагов."],
+    ["scary", "И вдруг из темноты раздался рёв."],
+    ["p", "Такой громкий и низкий, что Егор невольно присел и зажал уши."],
+    ["p", "Через секунду всё стихло."],
+    ["emph", "Силуэта не было."],
+    ["p", "Позади щёлкнула калитка."],
+    ["p", "Егор резко обернулся."],
+    ["emph", "Никого."],
+    ["p", "Он бросился обратно к дороге."],
+    ["p", "За спиной послышались шаги."],
+    ["p", "Сначала медленные."],
+    ["p", "Потом быстрее."],
+    ["p", "Егор побежал."],
+    ["scary", "Шаги за спиной бежали в такт его собственным."],
+    ["p", "Через несколько минут впереди показались первые дома посёлка."],
+    ["p", "Егор не остановился, пока не добежал до подъезда."],
+
+    ["pause", ""],
+    ["p", "Дома было тихо."],
+    ["p", "Егор снял куртку, разулся и прошёл на кухню."],
+    ["p", "Аня сидела там."],
+    ["dlg", "— Ты чего так поздно?"],
+    ["dlg", "— Автобус сломался. Пешком пришлось идти."],
+    ["p", "Егор посмотрел на неё."],
+    ["dlg", "— Ты мне звонила?"],
+    ["p", "Аня удивлённо посмотрела на него."],
+    ["dlg", "— Нет."],
+    ["emph", "Егор замолчал."],
+    ["dlg", "— Тогда что с папой?"],
+    ["p", "Аня ответила спокойно:"],
+    ["dlg", "— Папе плохо было. Но сейчас нормально. Он спит."],
+    ["p", "Егор сразу заглянул к отцу."],
+    ["p", "Тот действительно спал."],
+    ["p", "Егор постоял несколько секунд у двери, убедился, что всё нормально, и вернулся на кухню."],
+    ["p", "Он поужинал, немного посидел и пошёл спать."],
+
+    ["pause", ""],
+    ["p", "Ночью Егор проснулся."],
+    ["p", "В квартире было тихо."],
+    ["p", "Из коридора пробивался тусклый свет ночника."],
+    ["p", "Он вышел из комнаты и сначала заглянул к отцу."],
+    ["p", "Тот лежал в кровати и спал."],
+    ["p", "Егор прикрыл дверь и пошёл дальше."],
+    ["scary", "Аня сидела перед зеркалом."],
+    ["p", "Она спокойно расчёсывала свои длинные волосы и что-то тихо бормотала себе под нос."],
+    ["p", "Егор остановился в дверях."],
+    ["dlg", "— Аня, что ты там бормочешь? И почему не спишь?"],
+    ["p", "Аня медленно подняла глаза и посмотрела на него."],
+    ["p", "Она встала, подошла к Егору и взяла его за руку."],
+    ["p", "И тихим, почти ласковым голосом сказала:"],
+    ["final", "— Спасибо, что привёл меня домой."],
+    ["emph", "Егор замер."],
+    ["p", "Из комнаты отца донёсся кашель."],
+    ["p", "Один раз."],
+    ["p", "Потом ещё раз."],
+    ["p", "Егор медленно повернул голову в сторону двери."],
+    ["final", "Он узнал этот кашель."]
+  ];
+
+  /* ============================================================
+     ПОСТРОЕНИЕ
+     ============================================================ */
+
+  const storyEl      = document.getElementById("story");
+  const reader       = document.getElementById("reader");
+  const startScreen  = document.getElementById("start");
+  const soundToggle  = document.getElementById("soundToggle");
+  const vignette     = document.getElementById("vignette");
+
+  const elements = [];
+  STORY.forEach(function (item) {
+    const cls  = item[0];
+    const text = item[1];
+    const div  = document.createElement("div");
+    div.className = "chunk " + cls;
+    div.textContent = text;
+    storyEl.appendChild(div);
+    elements.push({ el: div, cls: cls, text: text });
+  });
+
+  let started  = false;
+  let soundOn  = false;
+
+  /* ============================================================
+     ТАЙМИНГ
+     ============================================================ */
+
+  function durationFor(cls, text) {
+    if (cls === "title")  return 3500;
+    if (cls === "author") return 2800;
+    if (cls === "pause")  return 1400;
+    if (cls === "dlg")    return 1700 + Math.min(text.length * 12, 1200);
+    if (cls === "emph")   return 2400 + Math.min(text.length * 15, 1400);
+    if (cls === "scary")  return 3200 + Math.min(text.length * 18, 1800);
+    if (cls === "final")  return 4500;
+    return 1900 + Math.min(text.length * 11, 2000);
+  }
+
+  function scrollToBottom() {
+    try {
+      reader.scrollTo({ top: reader.scrollHeight, behavior: "smooth" });
+    } catch (e) {
+      reader.scrollTop = reader.scrollHeight;
+    }
+  }
+
+  function flashScreen() {
+    vignette.style.transition = "none";
+    vignette.style.background =
+      "radial-gradient(ellipse at center, rgba(80,0,0,0.18) 0%, rgba(0,0,0,0.65) 72%, rgba(0,0,0,0.98) 100%)";
+    requestAnimationFrame(function () {
+      vignette.style.transition = "background 1.3s ease";
+      vignette.style.background =
+        "radial-gradient(ellipse at center, transparent 22%, rgba(0,0,0,0.55) 78%, rgba(0,0,0,0.95) 100%)";
+    });
+  }
+
+  /* ============================================================
+     ПРОКРУТКА ИСТОРИИ
+     ============================================================ */
+
+  function playChunk(i) {
+    if (i >= elements.length) return;
+
+    const item = elements[i];
+    const cls  = item.cls;
+    const text = item.text;
+
+    if (cls === "pause") {
+      item.el.classList.add("show");
+      scrollToBottom();
+      setTimeout(function () { playChunk(i + 1); }, durationFor(cls, text));
+      return;
     }
 
-    function playDrone(duration) {
-        const now = audioCtx.currentTime;
-        const osc1 = audioCtx.createOscillator();
-        osc1.type = "sine";
-        osc1.frequency.value = 42;
+    item.el.classList.add("show");
+    scrollToBottom();
 
-        const osc2 = audioCtx.createOscillator();
-        osc2.type = "sine";
-        osc2.frequency.value = 63;
-        osc2.detune.value = 8;
-
-        const gain = audioCtx.createGain();
-        gain.gain.setValueAtTime(0, now);
-        gain.gain.linearRampToValueAtTime(0.15, now + 1.5);
-        gain.gain.linearRampToValueAtTime(0.2, now + duration - 1.5);
-        gain.gain.linearRampToValueAtTime(0, now + duration);
-
-        osc1.connect(gain);
-        osc2.connect(gain);
-        gain.connect(audioCtx.destination);
-
-        osc1.start(now); osc2.start(now);
-        osc1.stop(now + duration); osc2.stop(now + duration);
+    if (cls === "scary" || cls === "final") {
+      flashScreen();
     }
 
-    function playScream() {
-        const now = audioCtx.currentTime;
-        const dur = 2.0;
+    setTimeout(function () { playChunk(i + 1); }, durationFor(cls, text));
+  }
 
-        /* ---- шум ---- */
-        const buffer = audioCtx.createBuffer(1, audioCtx.sampleRate * dur, audioCtx.sampleRate);
-        const data = buffer.getChannelData(0);
-        for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
+  /* ============================================================
+     ЗАПУСК
+     ============================================================ */
 
-        const noise = audioCtx.createBufferSource();
-        noise.buffer = buffer;
+  function beginStory() {
+    if (started) return;
+    started = true;
 
-        /* ---- дисторшн ---- */
-        const shaper = audioCtx.createWaveShaper();
-        const curve = new Float32Array(65536);
-        for (let i = 0; i < 65536; i++) {
-            const x = (i / 32768) - 1;
-            curve[i] = Math.tanh(x * 7);
-        }
-        shaper.curve = curve;
+    startScreen.classList.add("gone");
+    setTimeout(function () { startScreen.style.display = "none"; }, 1800);
 
-        /* ---- полосовой ---- */
-        const filter = audioCtx.createBiquadFilter();
-        filter.type = "bandpass";
-        filter.frequency.setValueAtTime(2200, now);
-        filter.frequency.exponentialRampToValueAtTime(320, now + dur);
-        filter.Q.value = 1.3;
+    if (soundOn) startAmbient();
 
-        const noiseGain = audioCtx.createGain();
-        noiseGain.gain.setValueAtTime(0, now);
-        noiseGain.gain.linearRampToValueAtTime(0.7, now + 0.03);
-        noiseGain.gain.setValueAtTime(0.7, now + dur * 0.7);
-        noiseGain.gain.exponentialRampToValueAtTime(0.001, now + dur);
+    setTimeout(function () { playChunk(0); }, 600);
+  }
 
-        noise.connect(shaper);
-        shaper.connect(filter);
-        filter.connect(noiseGain);
-        noiseGain.connect(audioCtx.destination);
-        noise.start(now);
-        noise.stop(now + dur);
-
-        /* ---- сабвуфер ---- */
-        const sub = audioCtx.createOscillator();
-        sub.type = "sawtooth";
-        sub.frequency.setValueAtTime(130, now);
-        sub.frequency.exponentialRampToValueAtTime(24, now + dur);
-        const subGain = audioCtx.createGain();
-        subGain.gain.setValueAtTime(0.6, now);
-        subGain.gain.exponentialRampToValueAtTime(0.001, now + dur);
-        sub.connect(subGain);
-        subGain.connect(audioCtx.destination);
-        sub.start(now); sub.stop(now + dur);
-
-        /* ---- высокий вой ---- */
-        const whine = audioCtx.createOscillator();
-        whine.type = "square";
-        whine.frequency.setValueAtTime(3800, now);
-        whine.frequency.linearRampToValueAtTime(2400, now + dur);
-        const whineGain = audioCtx.createGain();
-        whineGain.gain.setValueAtTime(0.06, now);
-        whineGain.gain.exponentialRampToValueAtTime(0.001, now + dur);
-        whine.connect(whineGain);
-        whineGain.connect(audioCtx.destination);
-        whine.start(now); whine.stop(now + dur);
+  startScreen.addEventListener("click", beginStory);
+  document.addEventListener("keydown", function (e) {
+    if (!started && (e.key === " " || e.key === "Enter")) {
+      beginStory();
     }
+  });
 
-    /* ================= СЦЕНАРИЙ ================= */
+  /* ============================================================
+     АУДИО — тихий гул и дождь (опционально)
+     ============================================================ */
 
-    function start() {
-        initAudio();
-        buildup.classList.add("gone");
-        startBtn.style.display = "none";
+  let audioCtx = null;
+  let ambientNodes = [];
 
-        const phrases = [
-            "ты один?",
-            "не оглядывайся",
-            "он уже здесь",
-            "он смотрит",
-            "за твоей спиной",
-            "он ближе, чем кажется",
-            "не закрывай глаза",
-            "он уже внутри"
-        ];
-
-        playDrone(5.2);
-
-        let pi = 0;
-        let stillRunning = true;
-
-        function nextWhisper() {
-            if (!stillRunning || pi >= phrases.length) return;
-            whisper.textContent = phrases[pi];
-            whisper.classList.add("on");
-            pi++;
-            setTimeout(function () {
-                whisper.classList.remove("on");
-                if (stillRunning) setTimeout(nextWhisper, 250);
-            }, 550);
-        }
-        setTimeout(nextWhisper, 200);
-
-        /* ---- СКРИМЕР ---- */
-        setTimeout(function () {
-            stillRunning = false;
-            whisper.classList.remove("on");
-            buildup.style.display = "none";
-
-            playScream();
-            screamBox.classList.add("on");
-
-            if (navigator.vibrate) {
-                try { navigator.vibrate([280, 40, 280, 40, 500, 60, 700]); } catch(e) {}
-            }
-
-            /* ---- ЗАТИХАНИЕ И ФИНАЛ ---- */
-            setTimeout(function () {
-                screamBox.classList.remove("on");
-                screamBox.style.display = "none";
-                ending.classList.add("on");
-
-                setTimeout(function () {
-                    typeFinal("СПОКОЙНОЙ НОЧИ");
-                }, 2200);
-
-            }, 2000);
-
-        }, 5000);
+  function initAudio() {
+    if (!audioCtx) {
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      audioCtx = new Ctx();
     }
+    if (audioCtx.state === "suspended") audioCtx.resume();
+  }
 
-    function typeFinal(text) {
-        let i = 0;
-        const cursor = document.createElement("span");
-        cursor.className = "cursor";
-        finalText.appendChild(cursor);
+  function startAmbient() {
+    initAudio();
+    if (ambientNodes.length) return;
 
-        function step() {
-            if (i >= text.length) {
-                setTimeout(function () {
-                    cursor.style.display = "none";
-                    subtext.classList.add("on");
-                }, 2500);
-                return;
-            }
-            const ch = text[i];
-            cursor.insertAdjacentText("beforebegin", ch);
-            i++;
+    const now = audioCtx.currentTime;
 
-            let delay = 260 + Math.random() * 220;
-            if (ch === " ") delay = 700 + Math.random() * 400;
-            if (Math.random() < 0.1) delay += 500;
-            setTimeout(step, delay);
-        }
-        step();
+    /* гул */
+    const osc1 = audioCtx.createOscillator();
+    osc1.type = "sine";
+    osc1.frequency.value = 48;
+
+    const osc2 = audioCtx.createOscillator();
+    osc2.type = "sine";
+    osc2.frequency.value = 71;
+    osc2.detune.value = 6;
+
+    const droneGain = audioCtx.createGain();
+    droneGain.gain.setValueAtTime(0, now);
+    droneGain.gain.linearRampToValueAtTime(0.07, now + 4);
+
+    osc1.connect(droneGain);
+    osc2.connect(droneGain);
+    droneGain.connect(audioCtx.destination);
+    osc1.start(now);
+    osc2.start(now);
+
+    /* дождь */
+    const bufferSize = audioCtx.sampleRate * 4;
+    const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+    const data = buffer.getChannelData(0);
+    let last = 0;
+    for (let i = 0; i < bufferSize; i++) {
+      const white = Math.random() * 2 - 1;
+      data[i] = (last + white) * 0.5;
+      last = data[i];
     }
+    const noise = audioCtx.createBufferSource();
+    noise.buffer = buffer;
+    noise.loop = true;
 
-    startBtn.addEventListener("click", start);
+    const noiseFilter = audioCtx.createBiquadFilter();
+    noiseFilter.type = "bandpass";
+    noiseFilter.frequency.value = 1300;
+    noiseFilter.Q.value = 0.6;
+
+    const noiseGain = audioCtx.createGain();
+    noiseGain.gain.setValueAtTime(0, now);
+    noiseGain.gain.linearRampToValueAtTime(0.05, now + 5);
+
+    noise.connect(noiseFilter);
+    noiseFilter.connect(noiseGain);
+    noiseGain.connect(audioCtx.destination);
+    noise.start(now);
+
+    ambientNodes = [osc1, osc2, noise, droneGain, noiseGain];
+  }
+
+  function stopAmbient() {
+    if (!ambientNodes.length || !audioCtx) return;
+    const now = audioCtx.currentTime;
+    ambientNodes.forEach(function (n) {
+      if (n.gain) {
+        try { n.gain.gain.linearRampToValueAtTime(0, now + 1); } catch (e) {}
+      }
+    });
+    const copy = ambientNodes.slice();
+    setTimeout(function () {
+      copy.forEach(function (n) {
+        if (n.stop) { try { n.stop(); } catch (e) {} }
+      });
+    }, 1200);
+    ambientNodes = [];
+  }
+
+  soundToggle.addEventListener("click", function () {
+    soundOn = !soundOn;
+    soundToggle.textContent = "звук: " + (soundOn ? "вкл" : "выкл");
+    if (soundOn) {
+      if (started) startAmbient();
+    } else {
+      stopAmbient();
+    }
+  });
+
 })();
 </script>
 
