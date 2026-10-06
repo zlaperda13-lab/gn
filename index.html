@@ -41,14 +41,12 @@ html, body {
     radial-gradient(ellipse at 70% 30%, rgba(40, 70, 100, 0.07) 0%, transparent 45%);
   animation: fogMove 80s linear infinite;
   pointer-events: none;
-  will-change: transform;
 }
 
 .fog.f2 {
   animation-duration: 130s;
   animation-direction: reverse;
-  background:
-    radial-gradient(ellipse at 60% 40%, rgba(50, 80, 110, 0.06) 0%, transparent 50%);
+  background: radial-gradient(ellipse at 60% 40%, rgba(50, 80, 110, 0.06) 0%, transparent 50%);
 }
 
 @keyframes fogMove {
@@ -61,7 +59,7 @@ html, body {
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  opacity: 0.28;
+  opacity: 0.26;
   background-image:
     repeating-linear-gradient(102deg,
       transparent 0,
@@ -84,7 +82,7 @@ html, body {
   inset: 0;
   z-index: 5;
   pointer-events: none;
-  background: radial-gradient(ellipse at center, transparent 22%, rgba(0,0,0,0.55) 78%, rgba(0,0,0,0.95) 100%);
+  background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.5) 80%, rgba(0,0,0,0.92) 100%);
   transition: background 1.2s ease;
 }
 
@@ -93,7 +91,7 @@ html, body {
   inset: 0;
   z-index: 6;
   pointer-events: none;
-  opacity: 0.055;
+  opacity: 0.05;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   animation: grainShift 0.45s steps(3) infinite;
 }
@@ -114,9 +112,7 @@ html, body {
   overflow-y: auto;
   overflow-x: hidden;
   scrollbar-width: none;
-  padding: 15vh 8vw 35vh;
-  -webkit-mask-image: linear-gradient(180deg, transparent 0%, black 12%, black 82%, transparent 100%);
-  mask-image: linear-gradient(180deg, transparent 0%, black 12%, black 82%, transparent 100%);
+  padding: 10vh 8vw 30vh;
 }
 
 #reader::-webkit-scrollbar { display: none; }
@@ -132,7 +128,7 @@ html, body {
 .chunk {
   opacity: 0;
   transform: translateY(14px);
-  transition: opacity 1.6s ease, transform 1.6s ease;
+  transition: opacity 1.4s ease, transform 1.4s ease;
   margin-bottom: 1.1em;
 }
 
@@ -163,12 +159,10 @@ html, body {
   text-align: center;
   color: #5a7080;
   text-transform: uppercase;
-  margin-bottom: 4em;
+  margin-bottom: 3em;
 }
 
-.chunk.p {
-  color: #8fa5b5;
-}
+.chunk.p { color: #8fa5b5; }
 
 .chunk.dlg {
   color: #a8becd;
@@ -182,7 +176,7 @@ html, body {
   font-size: 1.05em;
   letter-spacing: 0.6px;
   text-shadow: 0 0 22px rgba(140, 180, 210, 0.3);
-  margin: 1.6em 0;
+  margin: 1.4em 0;
 }
 
 .chunk.scary {
@@ -190,12 +184,12 @@ html, body {
   font-size: 1.1em;
   letter-spacing: 0.9px;
   text-shadow: 0 0 22px rgba(180, 60, 60, 0.5), 0 0 44px rgba(150, 40, 40, 0.25);
-  margin: 1.6em 0;
+  margin: 1.4em 0;
 }
 
 .chunk.pause {
-  height: 0.4em;
-  margin-bottom: 1.8em;
+  height: 0.6em;
+  margin-bottom: 0.6em;
 }
 
 .chunk.final {
@@ -205,7 +199,7 @@ html, body {
   letter-spacing: 1.6px;
   text-shadow: 0 0 30px rgba(200, 50, 50, 0.7), 0 0 70px rgba(200, 50, 50, 0.35);
   animation: finalPulse 2.4s ease-in-out infinite;
-  margin: 1.8em 0;
+  margin: 1.6em 0;
 }
 
 @keyframes finalPulse {
@@ -224,7 +218,7 @@ html, body {
   align-items: center;
   justify-content: center;
   background: #04070d;
-  transition: opacity 1.8s ease;
+  transition: opacity 1.6s ease;
   cursor: pointer;
   padding: 20px;
   text-align: center;
@@ -336,9 +330,9 @@ html, body {
        "author" — автор
        "p"      — обычный абзац
        "dlg"    — реплика (диалог)
-       "emph"   — акцент, короткая сильная строка
-       "scary"  — страшный момент (тревожный красный)
-       "final"  — финальные строки (сильное свечение)
+       "emph"   — акцент
+       "scary"  — страшный момент
+       "final"  — финальные строки
        "pause"  — пустая пауза
      ============================================================ */
 
@@ -520,93 +514,97 @@ html, body {
   ];
 
   /* ============================================================
-     ПОСТРОЕНИЕ
+     ЭЛЕМЕНТЫ
      ============================================================ */
 
-  const storyEl      = document.getElementById("story");
-  const reader       = document.getElementById("reader");
-  const startScreen  = document.getElementById("start");
-  const soundToggle  = document.getElementById("soundToggle");
-  const vignette     = document.getElementById("vignette");
+  const storyEl     = document.getElementById("story");
+  const reader      = document.getElementById("reader");
+  const startScreen = document.getElementById("start");
+  const soundToggle = document.getElementById("soundToggle");
+  const vignette    = document.getElementById("vignette");
 
-  const elements = [];
-  STORY.forEach(function (item) {
-    const cls  = item[0];
-    const text = item[1];
-    const div  = document.createElement("div");
-    div.className = "chunk " + cls;
-    div.textContent = text;
-    storyEl.appendChild(div);
-    elements.push({ el: div, cls: cls, text: text });
-  });
-
-  let started  = false;
-  let soundOn  = false;
+  let started = false;
+  let soundOn = false;
 
   /* ============================================================
      ТАЙМИНГ
      ============================================================ */
 
   function durationFor(cls, text) {
-    if (cls === "title")  return 3500;
-    if (cls === "author") return 2800;
-    if (cls === "pause")  return 1400;
-    if (cls === "dlg")    return 1700 + Math.min(text.length * 12, 1200);
-    if (cls === "emph")   return 2400 + Math.min(text.length * 15, 1400);
-    if (cls === "scary")  return 3200 + Math.min(text.length * 18, 1800);
+    if (cls === "title")  return 3000;
+    if (cls === "author") return 2200;
+    if (cls === "pause")  return 1200;
+    if (cls === "dlg")    return 1400 + Math.min(text.length * 10, 900);
+    if (cls === "emph")   return 2000 + Math.min(text.length * 13, 1200);
+    if (cls === "scary")  return 2800 + Math.min(text.length * 15, 1500);
     if (cls === "final")  return 4500;
-    return 1900 + Math.min(text.length * 11, 2000);
-  }
-
-  function scrollToBottom() {
-    try {
-      reader.scrollTo({ top: reader.scrollHeight, behavior: "smooth" });
-    } catch (e) {
-      reader.scrollTop = reader.scrollHeight;
-    }
-  }
-
-  function flashScreen() {
-    vignette.style.transition = "none";
-    vignette.style.background =
-      "radial-gradient(ellipse at center, rgba(80,0,0,0.18) 0%, rgba(0,0,0,0.65) 72%, rgba(0,0,0,0.98) 100%)";
-    requestAnimationFrame(function () {
-      vignette.style.transition = "background 1.3s ease";
-      vignette.style.background =
-        "radial-gradient(ellipse at center, transparent 22%, rgba(0,0,0,0.55) 78%, rgba(0,0,0,0.95) 100%)";
-    });
+    return 1600 + Math.min(text.length * 10, 1600);
   }
 
   /* ============================================================
-     ПРОКРУТКА ИСТОРИИ
+     ДОБАВЛЕНИЕ ЧАНКА
+     ============================================================ */
+
+  function appendChunk(cls, text) {
+    const div = document.createElement("div");
+    div.className = "chunk " + cls;
+    if (text) {
+      div.textContent = text;
+    } else {
+      div.innerHTML = "&nbsp;";
+    }
+    storyEl.appendChild(div);
+
+    /* форсируем reflow, чтобы transition сработал */
+    void div.offsetHeight;
+
+    div.classList.add("show");
+
+    /* прокрутка к только что добавленному элементу */
+    requestAnimationFrame(function () {
+      const target = div.offsetTop + div.offsetHeight - reader.clientHeight + 120;
+      reader.scrollTo({
+        top: Math.max(0, target),
+        behavior: "smooth"
+      });
+    });
+
+    return div;
+  }
+
+  /* ============================================================
+     ПРОИГРЫВАНИЕ
      ============================================================ */
 
   function playChunk(i) {
-    if (i >= elements.length) return;
+    if (i >= STORY.length) return;
 
-    const item = elements[i];
-    const cls  = item.cls;
-    const text = item.text;
+    const cls  = STORY[i][0];
+    const text = STORY[i][1];
 
-    if (cls === "pause") {
-      item.el.classList.add("show");
-      scrollToBottom();
-      setTimeout(function () { playChunk(i + 1); }, durationFor(cls, text));
-      return;
-    }
-
-    item.el.classList.add("show");
-    scrollToBottom();
+    appendChunk(cls, text);
 
     if (cls === "scary" || cls === "final") {
       flashScreen();
     }
 
-    setTimeout(function () { playChunk(i + 1); }, durationFor(cls, text));
+    const dur = durationFor(cls, text);
+    setTimeout(function () { playChunk(i + 1); }, dur);
+  }
+
+  function flashScreen() {
+    vignette.style.transition = "none";
+    vignette.style.background =
+      "radial-gradient(ellipse at center, rgba(90,0,0,0.20) 0%, rgba(0,0,0,0.68) 72%, rgba(0,0,0,0.98) 100%)";
+    requestAnimationFrame(function () {
+      vignette.style.transition = "background 1.3s ease";
+      vignette.style.background =
+        "radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.5) 80%, rgba(0,0,0,0.92) 100%)";
+    });
   }
 
   /* ============================================================
-     ЗАПУСК
+     СТАРТ
      ============================================================ */
 
   function beginStory() {
@@ -614,11 +612,11 @@ html, body {
     started = true;
 
     startScreen.classList.add("gone");
-    setTimeout(function () { startScreen.style.display = "none"; }, 1800);
+    setTimeout(function () { startScreen.style.display = "none"; }, 1700);
 
     if (soundOn) startAmbient();
 
-    setTimeout(function () { playChunk(0); }, 600);
+    setTimeout(function () { playChunk(0); }, 500);
   }
 
   startScreen.addEventListener("click", beginStory);
@@ -629,7 +627,7 @@ html, body {
   });
 
   /* ============================================================
-     АУДИО — тихий гул и дождь (опционально)
+     ЗВУК
      ============================================================ */
 
   let audioCtx = null;
@@ -649,7 +647,6 @@ html, body {
 
     const now = audioCtx.currentTime;
 
-    /* гул */
     const osc1 = audioCtx.createOscillator();
     osc1.type = "sine";
     osc1.frequency.value = 48;
@@ -661,7 +658,7 @@ html, body {
 
     const droneGain = audioCtx.createGain();
     droneGain.gain.setValueAtTime(0, now);
-    droneGain.gain.linearRampToValueAtTime(0.07, now + 4);
+    droneGain.gain.linearRampToValueAtTime(0.06, now + 4);
 
     osc1.connect(droneGain);
     osc2.connect(droneGain);
@@ -669,7 +666,6 @@ html, body {
     osc1.start(now);
     osc2.start(now);
 
-    /* дождь */
     const bufferSize = audioCtx.sampleRate * 4;
     const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
     const data = buffer.getChannelData(0);
@@ -690,7 +686,7 @@ html, body {
 
     const noiseGain = audioCtx.createGain();
     noiseGain.gain.setValueAtTime(0, now);
-    noiseGain.gain.linearRampToValueAtTime(0.05, now + 5);
+    noiseGain.gain.linearRampToValueAtTime(0.045, now + 5);
 
     noise.connect(noiseFilter);
     noiseFilter.connect(noiseGain);
