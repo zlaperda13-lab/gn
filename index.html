@@ -527,18 +527,18 @@ html, body {
   let soundOn = false;
 
   /* ============================================================
-     ТАЙМИНГ
+     ТАЙМИНГ (удвоенная длительность)
      ============================================================ */
 
   function durationFor(cls, text) {
-    if (cls === "title")  return 3000;
-    if (cls === "author") return 2200;
-    if (cls === "pause")  return 1200;
-    if (cls === "dlg")    return 1400 + Math.min(text.length * 10, 900);
-    if (cls === "emph")   return 2000 + Math.min(text.length * 13, 1200);
-    if (cls === "scary")  return 2800 + Math.min(text.length * 15, 1500);
-    if (cls === "final")  return 4500;
-    return 1600 + Math.min(text.length * 10, 1600);
+    if (cls === "title")  return 6000;
+    if (cls === "author") return 4400;
+    if (cls === "pause")  return 2400;
+    if (cls === "dlg")    return 2800 + Math.min(text.length * 20, 1800);
+    if (cls === "emph")   return 4000 + Math.min(text.length * 26, 2400);
+    if (cls === "scary")  return 5600 + Math.min(text.length * 30, 3000);
+    if (cls === "final")  return 9000;
+    return 3200 + Math.min(text.length * 20, 3200);
   }
 
   /* ============================================================
@@ -555,12 +555,10 @@ html, body {
     }
     storyEl.appendChild(div);
 
-    /* форсируем reflow, чтобы transition сработал */
     void div.offsetHeight;
 
     div.classList.add("show");
 
-    /* прокрутка к только что добавленному элементу */
     requestAnimationFrame(function () {
       const target = div.offsetTop + div.offsetHeight - reader.clientHeight + 120;
       reader.scrollTo({
